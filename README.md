@@ -47,6 +47,12 @@ Go to the app folder.
 cd ruby-library
 ```
 
+Use below command to run
+
+```
+ruby main.rb
+```
+
 ## Authors
 
 👤 **Yigit Mersin**
