@@ -1,10 +1,10 @@
 ![](https://img.shields.io/badge/Microverse-blueviolet)
 
-# Ruby Template
+# Ruby Library
 
-> It takes a string parameter, and return the corresponding character in uppercase to decode the morse code.
+> A command line library app to use Ruby OOP structure. It consist of to use Ruby class structure with the concepts of required, default and optional paramaters, public & private methods, overriding methods and inheritance.
 
-![](app_screenshot.png)
+![]()
 
 ## Built With
 
@@ -36,7 +36,7 @@ cd your_desktop
 Run below commands.
 
 ```
-git clone git@github.com:yigitm/morse-code-decoder.git
+git clone git@github.com:yigitm/ruby-library.git
 ```
 
 ### Usage
@@ -44,13 +44,7 @@ git clone git@github.com:yigitm/morse-code-decoder.git
 Go to the app folder.
 
 ```
-cd morse-code-decoder
-```
-
-Run the app with below command.
-
-```
-ruby main.rb
+cd ruby-library
 ```
 
 ## Authors
@@ -65,7 +59,7 @@ ruby main.rb
 
 Contributions, issues, and feature requests are welcome!
 
-Feel free to check the [issues page](https://github.com/yigitm/morse-code-decoder/issues).
+Feel free to check the [issues page](git@github.com:yigitm/ruby-library.git/issues).
 
 ## Show your support
 
@@ -73,9 +67,9 @@ Give a ⭐️ if you like this project!
 
 ## Acknowledgments
 
-- Hat tip to anyone whose code was used
-- Inspiration
-- etc
+- Ruby
+- Microverse
+- Open Source
 
 ## 📝 License
 
