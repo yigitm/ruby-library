@@ -18,11 +18,14 @@ capitalized_trimmed_person = TrimmerDecorator.new(capitalized_person)
 p(capitalized_trimmed_person.correct_name)
 
 # Test: object & actions for student/classroom has_many/belongs_to relations
-(student = Student.new(23, 'Mike', 'First Grade'))
-p(classroom_obj = Classroom.new('First Grade'))
-p(classroom_obj.add_student(student))
-p(classroom_obj.students)
-p(student.classroom)
+mike = Student.new(23, 'Mike', 'First Grade')
+mia = Student.new(22, 'Mia', 'First Grade')
+first_grade = Classroom.new('First Grade')
+second_grade = Classroom.new('Second Grade')
+p(second_grade.add_student(mia))
+p(second_grade.students)
+p(first_grade.students)
+p(mia.add_classroom(first_grade))
 
 # Test: object & actions for person/rental/book/ has_many/has_many_through relations
 p(book = Book.new('Sapiens', 'Harrari'))
