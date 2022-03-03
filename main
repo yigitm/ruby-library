@@ -12,12 +12,29 @@ require_relative './lib/rental'
 require 'date'
 
 class App
-  puts 'Ruby-School Library App'
-  puts 'Please choose an option by entering a number:'
+  attr_reader :options, :user_select
+
+  def initialize
+    @user_select = nil
+    @options = ['List all books','List all people','Create a person','Create a book','Create a rental','List all rentals for a given person id','Exit']  
+  end
+  
+  def list
+    puts 'Ruby-School Library App'
+    puts 'Please choose an option by entering a number:'
+    @options.each_with_index { |option, ind| puts "#{ind + 1} #{option}" }
+  end
+
+  def user_input
+    @user_select = gets.chomp
+  end
 end
 
 def main
-  App.new
+  app = App.new
+  app.list
+  app.user_input
+  p(app.user_select)
 end
 
 main
