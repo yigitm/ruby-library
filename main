@@ -15,7 +15,7 @@ class App
   attr_reader :options, :user_select
 
   def initialize
-    @user_select = nil
+    @input = nil
     @options = ['List all books','List all people','Create a person','Create a book','Create a rental','List all rentals for a given person id','Exit']  
   end
   
@@ -25,16 +25,26 @@ class App
     @options.each_with_index { |option, ind| puts "#{ind + 1} #{option}" }
   end
 
-  def user_input
-    @user_select = gets.chomp
+  def get_input
+    @input = gets.chomp
+    unless @input.match?(/[1-7]/)
+      validate
+    end
+  end
+
+  def validate
+      loop do
+        puts "Invalid entry. Please type a number between 1..7"
+        @input = gets.chomp
+        break if @input.match?(/[1-7]/)
+      end
   end
 end
 
 def main
   app = App.new
   app.list
-  app.user_input
-  p(app.user_select)
+  app.get_input
 end
 
 main
