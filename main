@@ -79,7 +79,7 @@ class App
     name_input = name
 
     puts 'Specialization:'
-    Teacher.new(age_input, name_input, get_input)
+    p(Teacher.new(age_input, name_input, false, get_input))
     puts 'Teacher created successfully'
   end
 
