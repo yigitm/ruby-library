@@ -6,14 +6,13 @@ require_relative './lib/decorator'
 require_relative './lib/capitalize'
 require_relative './lib/trimmer'
 require_relative './lib/student'
+require_relative './lib/teacher'
 require_relative './lib/classroom'
 require_relative './lib/book'
 require_relative './lib/rental'
 require 'date'
 
 class App
-  attr_reader :options, :user_select
-
   def initialize
     @input = nil
     @options = ['List all books','List all people','Create a person','Create a book','Create a rental','List all rentals for a given person id','Exit']  
@@ -39,19 +38,56 @@ class App
     end
   end
 
+  def permission?
+    true if @input == 'Y' || @input == 'y'
+  end
+
   def action_dispatch
     case @input
     when 3.to_s
-      create_person
-      validate(2)
+      person
     else
       "Error in action dispatch"
     end
   end
 
-  def create_person
-    puts "Do you want to create student (1) or teacher (2)? Type (1) or (2):"
+  def age
+    puts 'Age:'
     get_input
+    validate(120)
+    @input
+  end
+
+  def name
+    puts 'Name:'
+    get_input
+  end
+
+  def student
+    age_input = age
+    name_input = name
+    
+    puts 'Has parent permission? [Y/N]:'
+    get_input
+
+    permission? ? Student.new(age_input, name_input, permission?) : Student.new(age_input, name_input)
+    puts 'Student created successfully'
+  end
+
+  def teacher
+    age_input = age
+    name_input = name
+
+    puts 'Specialization:'
+    Teacher.new(age_input, name_input, get_input)
+    puts 'Teacher created successfully'
+  end
+
+  def person
+    puts 'Do you want to create student (1) or teacher (2)? Type (1) or (2):'
+    get_input
+    validate(2)
+    @input == '1' ? student : teacher
   end
 
 
