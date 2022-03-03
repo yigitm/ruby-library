@@ -27,24 +27,42 @@ class App
 
   def get_input
     @input = gets.chomp
-    unless @input.match?(/[1-7]/)
-      validate
+  end
+
+  def validate(limit)
+    unless ('1'..limit.to_s).to_a.include?(@input)
+      loop do
+        puts "Invalid entry. Please type a number between 1..#{limit}"
+        @input = gets.chomp
+        break if ('1'..limit.to_s).to_a.include?(@input)
+      end
     end
   end
 
-  def validate
-      loop do
-        puts "Invalid entry. Please type a number between 1..7"
-        @input = gets.chomp
-        break if @input.match?(/[1-7]/)
-      end
+  def action_dispatch
+    case @input
+    when 3.to_s
+      create_person
+      validate(2)
+    else
+      "Error in action dispatch"
+    end
   end
+
+  def create_person
+    puts "Do you want to create student (1) or teacher (2)? Type (1) or (2):"
+    get_input
+  end
+
+
 end
 
 def main
   app = App.new
   app.list
   app.get_input
+  app.validate(7)
+  app.action_dispatch
 end
 
 main
