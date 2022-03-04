@@ -17,7 +17,6 @@ class App
     @input = nil
     @students = []
     @teachers = []
-    @people_all = []
     @books = []
     @options = ['List all books','List all people','Create a person','Create a book','Create a rental','List all rentals for a given person id','Exit']  
   end
@@ -60,7 +59,8 @@ class App
     when 1.to_s
       books
     when 2.to_s
-      people
+      students
+      teachers
     when 3.to_s
       person
     when 4.to_s
@@ -134,15 +134,27 @@ class App
     @books.each_with_index { |book, index| puts "#{index}) Title: #{book.title} Author: #{book.author}" }
   end
 
-  def people
-    @people_all = []
-    @students.each { |student| @people_all << "[Students] Name: #{student.name} ID: #{student.id} Age: #{student.age}" }
-    @teachers.each { |teacher| @people_all << "[Teachers] Name: #{teacher.name} ID: #{teacher.id} Age: #{teacher.age}" }
-    @people_all.each { |person| puts "#{person}" }
+  def students
+    @students.each { |student| puts "[Students] Name: #{student.name} ID: #{student.id} Age: #{student.age}" }
   end
 
-  def people_all
-    @people_all.each_with_index { |person, index| puts "#{index}) #{person}" }
+  def students_with_index
+    @students.each_with_index { |student, index| puts "#{index}) [Students] Name: #{student.name} ID: #{student.id} Age: #{student.age}" }
+  end
+
+  def teachers
+    @teachers.each { |teacher| puts "[Teachers] Name: #{teacher.name} ID: #{teacher.id} Age: #{teacher.age}" }
+  end
+
+  def teachers_with_index
+    index = @students.length
+    @teachers.each { |teacher| puts "#{index}) [Teachers] Name: #{teacher.name} ID: #{teacher.id} Age: #{teacher.age}" }
+  end
+
+  def find_person
+    index = @input.to_i
+    p(index)
+    @students[index] ? @students[index] : @teachers[(index - @students.length)]
   end
 
   def rental
@@ -150,18 +162,16 @@ class App
     books_with_index
     
     get_input
-    book_for_rent = @books[validate(0, @books.length).to_i]
+    validate(0, @books.length)
+    book_for_rent = @books[@input.to_i]
 
     puts 'Select a person from the following list by number (not id)'
-    people_all
-
+    students_with_index
+    teachers_with_index
     get_input
-    limit = people_all.length
-    index = validate(0, limit)
-    
-    p(index)
-    #person_who_rent = @people_all[index]
-    #p(Rental.new( Date.today, book_for_rent, person_who_rent ))
+    person_who_rent = find_person
+
+    p(Rental.new( Date.today, book_for_rent, person_who_rent ))
     puts 'Rental created successfully'
   end
 end
