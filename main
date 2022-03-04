@@ -17,6 +17,15 @@ class App
     @input = nil
     @options = ['List all books','List all people','Create a person','Create a book','Create a rental','List all rentals for a given person id','Exit']  
   end
+
+  def run
+    loop do
+      list
+      get_input
+      validate(7)
+      action_dispatch
+    end
+  end
   
   def list
     puts 'Ruby-School Library App'
@@ -46,8 +55,13 @@ class App
     case @input
     when 3.to_s
       person
+    when 4.to_s
+      book
+    when 7.to_s
+      puts 'Program ending...'
+      exit(false)
     else
-      "Error in action dispatch"
+      puts "Error in action dispatch"
     end
   end
 
@@ -90,15 +104,18 @@ class App
     @input == '1' ? student : teacher
   end
 
+  def book
+    puts 'Title:'
+    title = get_input
 
+    puts 'Author:'
+    author = get_input
+  end
 end
 
 def main
   app = App.new
-  app.list
-  app.get_input
-  app.validate(7)
-  app.action_dispatch
+  app.run
 end
 
 main
