@@ -17,6 +17,7 @@ class App
     @input = nil
     @students = []
     @teachers = []
+    @people_all = []
     @books = []
     @options = ['List all books','List all people','Create a person','Create a book','Create a rental','List all rentals for a given person id','Exit']  
   end
@@ -25,7 +26,7 @@ class App
     loop do
       options
       get_input
-      validate(7)
+      validate(1, 7)
       action_dispatch
     end
   end
@@ -40,12 +41,12 @@ class App
     @input = gets.chomp
   end
 
-  def validate(limit)
-    unless ('1'..limit.to_s).to_a.include?(@input)
+  def validate(start, limit)
+    unless (start.to_s..limit.to_s).to_a.include?(@input)
       loop do
-        puts "Invalid entry. Please type a number between 1..#{limit}"
+        puts "Invalid entry. Please type a number between #{start}..#{limit}"
         @input = gets.chomp
-        break if ('1'..limit.to_s).to_a.include?(@input)
+        break if (start.to_s..limit.to_s).to_a.include?(@input)
       end
     end
   end
@@ -71,13 +72,14 @@ class App
       exit(false)
     else
       puts "Error in action dispatch"
+      exit(false)
     end
   end
 
   def age
     puts 'Age:'
     get_input
-    validate(120)
+    validate(0, 120)
     @input
   end
 
@@ -109,7 +111,7 @@ class App
   def person
     puts 'Do you want to create student (1) or teacher (2)? Type (1) or (2):'
     get_input
-    validate(2)
+    validate(1, 2)
     @input == '1' ? student : teacher
   end
 
@@ -128,13 +130,39 @@ class App
     @books.each { |book| puts "Title: #{book.title} Author: #{book.author}" }
   end
 
+  def books_with_index
+    @books.each_with_index { |book, index| puts "#{index}) Title: #{book.title} Author: #{book.author}" }
+  end
+
   def people
-    @students.each { |student| puts "[Students] Name: #{student.name} ID: #{student.id} Age: #{student.age}" }
-    @teachers.each { |teacher| puts "[Teachers] Name: #{teacher.name} ID: #{teacher.id} Age: #{teacher.age}" }
+    @people_all = []
+    @students.each { |student| @people_all << "[Students] Name: #{student.name} ID: #{student.id} Age: #{student.age}" }
+    @teachers.each { |teacher| @people_all << "[Teachers] Name: #{teacher.name} ID: #{teacher.id} Age: #{teacher.age}" }
+    @people_all.each { |person| puts "#{person}" }
+  end
+
+  def people_all
+    @people_all.each_with_index { |person, index| puts "#{index}) #{person}" }
   end
 
   def rental
+    puts 'Select a book from the following list by number'
+    books_with_index
     
+    get_input
+    book_for_rent = @books[validate(0, @books.length).to_i]
+
+    puts 'Select a person from the following list by number (not id)'
+    people_all
+
+    get_input
+    limit = people_all.length
+    index = validate(0, limit)
+    
+    p(index)
+    #person_who_rent = @people_all[index]
+    #p(Rental.new( Date.today, book_for_rent, person_who_rent ))
+    puts 'Rental created successfully'
   end
 end
 
