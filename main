@@ -1,13 +1,8 @@
 #!/usr/bin/env ruby
 
 require_relative './lib/person'
-require_relative './lib/nameable'
-require_relative './lib/decorator'
-require_relative './lib/capitalize'
-require_relative './lib/trimmer'
 require_relative './lib/student'
 require_relative './lib/teacher'
-require_relative './lib/classroom'
 require_relative './lib/book'
 require_relative './lib/rental'
 require 'date'
@@ -18,35 +13,35 @@ class App
     @students = []
     @teachers = []
     @books = []
-    @options = ['List all books','List all people','Create a person','Create a book','Create a rental','List all rentals for a given person id','Exit']  
+    @options = ['List all books', 'List all people', 'Create a person', 'Create a book', 'Create a rental',
+                'List all rentals for a given person id', 'Exit']
   end
 
   def run
     loop do
       options
-      get_input
+      adjust_input
       validate(1, 7)
       action_dispatch
     end
   end
-  
+
   def options
-    puts 'Ruby-School Library App'
-    puts 'Please choose an option by entering a number:'
+    puts "Ruby-School Library App\nPlease choose an option by entering a number:\n"
     @options.each_with_index { |option, ind| puts "#{ind + 1} #{option}" }
   end
 
-  def get_input
+  def adjust_input
     @input = gets.chomp
   end
 
   def validate(start, limit)
-    unless (start.to_s..limit.to_s).to_a.include?(@input)
-      loop do
-        puts "Invalid entry. Please type a number between #{start}..#{limit}"
-        @input = gets.chomp
-        break if (start.to_s..limit.to_s).to_a.include?(@input)
-      end
+    return if (start.to_s..limit.to_s).to_a.include?(@input)
+
+    loop do
+      puts "Invalid entry. Please type a number between #{start}..#{limit}"
+      @input = gets.chomp
+      break if (start.to_s..limit.to_s).to_a.include?(@input)
     end
   end
 
@@ -54,6 +49,7 @@ class App
     true if @input == 'Y' || @input == 'y'
   end
 
+  # rubocop:disable Metrics/CyclomaticComplexity
   def action_dispatch
     case @input
     when 1.to_s
@@ -70,34 +66,35 @@ class App
     when 6.to_s
       find_rental
     when 7.to_s
-      puts 'Programme ending...'
-      exit(false)
-    else
-      puts "Error in action dispatch"
       exit(false)
     end
   end
 
+  # rubocop:enable Metrics/CyclomaticComplexity
   def age
     puts 'Age:'
-    get_input
+    adjust_input
     validate(0, 120)
     @input
   end
 
   def name
     puts 'Name:'
-    get_input
+    adjust_input
   end
 
   def student
     age_input = age
     name_input = name
-    
     puts 'Has parent permission? [Y/N]:'
-    get_input
+    adjust_input
 
-    permission? ? @students << Student.new(age_input, name_input, permission?) : @students << Student.new(age_input, name_input)
+    @students << (if permission?
+                    Student.new(age_input, name_input,
+                                permission?)
+                  else
+                    Student.new(age_input, name_input)
+                  end)
     puts 'Student created successfully'
   end
 
@@ -106,23 +103,22 @@ class App
     name_input = name
 
     puts 'Specialization:'
-    @teachers << Teacher.new(age_input, name_input, false, get_input)
+    @teachers << Teacher.new(age_input, name_input, false, adjust_input)
     puts 'Teacher created successfully'
   end
 
   def person
     puts 'Do you want to create student (1) or teacher (2)? Type (1) or (2):'
-    get_input
+    adjust_input
     validate(1, 2)
     @input == '1' ? student : teacher
   end
 
   def book
     puts 'Title:'
-    title = get_input
-
+    title = adjust_input
     puts 'Author:'
-    author = get_input
+    author = adjust_input
 
     @books << Book.new(title, author)
     puts 'Book created successfully'
@@ -141,7 +137,9 @@ class App
   end
 
   def students_with_index
-    @students.each_with_index { |student, index| puts "#{index}) [Students] Name: #{student.name} ID: #{student.id} Age: #{student.age}" }
+    @students.each_with_index do |student, index|
+      puts "#{index}) [Students] Name: #{student.name} ID: #{student.id} Age: #{student.age}"
+    end
   end
 
   def teachers
@@ -156,37 +154,38 @@ class App
   def find_person
     index = @input.to_i
     p(index)
-    @students[index] ? @students[index] : @teachers[(index - @students.length)]
+    @students[index] || @teachers[(index - @students.length)]
   end
 
   def rental
     puts 'Select a book from the following list by number'
     books_with_index
-    get_input
+    adjust_input
     validate(0, @books.length)
     book_for_rent = @books[@input.to_i]
 
     puts 'Select a person from the following list by number (not id)'
     students_with_index
     teachers_with_index
-    get_input
+    adjust_input
     person_who_rent = find_person
 
     puts 'Type date like : YYYY-MM-DD'
-    get_input
-    p(Rental.new( @input, book_for_rent, person_who_rent ))
-    
+    adjust_input
+    p(Rental.new(@input, book_for_rent, person_who_rent))
+
     puts 'Rental created successfully'
   end
 
   def find_rental
     rentals = nil
     print 'ID of Person: '
-    get_input
+    adjust_input
     @students.each { |student| rentals = student.rentals if student.id == @input.to_i }
     @teachers.each { |teacher| rentals = teacher.rentals if teacher.id == @input.to_i }
-    rentals.each { |rent| puts "Date: #{rent.date}, Book: #{rent.book.title}, Author: #{rent.book.author}" } if rentals
-    puts "Rental: " unless rentals
+    return puts "Rentals: No record found\n" unless rentals
+
+    rentals.each { |rent| puts "Rental: Date: #{rent.date}, Book: #{rent.book.title}, Author: #{rent.book.author}\n" }
   end
 end
 
