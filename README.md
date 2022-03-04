@@ -2,9 +2,9 @@
 
 # Ruby Library
 
-> A command line library app to use Ruby OOP structure. It consist of to use Ruby class structure with the concepts of required, default and optional paramaters, public & private methods, overriding methods and inheritance.
+> A command line library app to use Ruby OOP structure. It consist of to use Ruby class structure with the concepts of required, default and optional paramaters, public & private methods, overriding methods and inheritance. "Belongs-to", "Has-many", and "Has-many-through" associations are used in Ruby O.O.P structure.
 
-![]()
+![](app.gif)
 
 ## Built With
 
