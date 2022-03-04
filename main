@@ -162,7 +162,6 @@ class App
   def rental
     puts 'Select a book from the following list by number'
     books_with_index
-    
     get_input
     validate(0, @books.length)
     book_for_rent = @books[@input.to_i]
@@ -173,7 +172,10 @@ class App
     get_input
     person_who_rent = find_person
 
-    p(Rental.new( Date.today, book_for_rent, person_who_rent ))
+    puts 'Type date like : YYYY-MM-DD'
+    get_input
+    p(Rental.new( @input, book_for_rent, person_who_rent ))
+    
     puts 'Rental created successfully'
   end
 
