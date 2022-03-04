@@ -67,6 +67,8 @@ class App
       book
     when 5.to_s
       rental
+    when 6.to_s
+      find_rental
     when 7.to_s
       puts 'Programme ending...'
       exit(false)
@@ -173,6 +175,16 @@ class App
 
     p(Rental.new( Date.today, book_for_rent, person_who_rent ))
     puts 'Rental created successfully'
+  end
+
+  def find_rental
+    rentals = nil
+    print 'ID of Person: '
+    get_input
+    @students.each { |student| rentals = student.rentals if student.id == @input.to_i }
+    @teachers.each { |teacher| rentals = teacher.rentals if teacher.id == @input.to_i }
+    rentals.each { |rent| puts "Date: #{rent.date}, Book: #{rent.book.title}, Author: #{rent.book.author}" } if rentals
+    puts "Rental: " unless rentals
   end
 end
 
