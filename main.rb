@@ -12,6 +12,7 @@ class App
     @input = nil
     @people = []
     @books = []
+    @rentals = []
     @options = ['List all books', 'List all people', 'Create a person', 'Create a book', 'Create a rental',
                 'List all rentals for a given person id', 'Exit']
   end
@@ -45,7 +46,8 @@ class App
   end
 
   def permission?
-    true if @input.downcase == 'y'
+    return true if @input.downcase == 'y'
+    false
   end
 
   def action_dispatch
@@ -85,12 +87,7 @@ class App
     puts 'Has parent permission? [Y/N]:'
     adjust_input
 
-    @people << (if permission?
-                    Student.new(age_input, name_input,
-                                permission?)
-                  else
-                    Student.new(age_input, name_input)
-                  end)
+    @people << Student.new(age_input, name_input, permission?)
     puts 'Student created successfully'
   end
 
@@ -137,7 +134,7 @@ class App
   def find_person
     index = @input.to_i
     p(index)
-    @students[index] || @teachers[(index - @students.length)]
+    @people[index]
   end
 
   def rental
@@ -154,19 +151,28 @@ class App
 
     puts 'Type date like : YYYY-MM-DD'
     adjust_input
-    p(Rental.new(@input, book_for_rent, person_who_rent))
+    Rental.new(@input, book_for_rent, person_who_rent)
 
     puts 'Rental created successfully'
   end
 
   def find_rental
-    rentals = nil
+    @rentals = []
     print 'ID of Person: '
     adjust_input
-    @people.each { |person| rentals = person.rentals if person.id == @input.to_i }
-    return puts "Rentals: No record found\n" unless rentals
+    find_people_who_rent
 
-    rentals.each { |rent| puts "Rental: Date: #{rent.date}, Book: #{rent.book.title}, Author: #{rent.book.author}\n" }
+    return puts "Rentals: No record found\n" if @rentals.length == 0
+
+    display_rentals
+  end
+
+  def find_people_who_rent
+    @people.each { |person| @rentals = person.rentals if person.id == @input.to_i }
+  end
+
+  def display_rentals
+    @rentals.each { |rent| puts "Rental: Date: #{rent.date}, Book: #{rent.book.title}, Author: #{rent.book.author}\n" }
   end
 end
 
