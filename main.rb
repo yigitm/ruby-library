@@ -47,6 +47,7 @@ class App
 
   def permission?
     return true if @input.downcase == 'y'
+
     false
   end
 
@@ -130,7 +131,7 @@ class App
       puts "[#{person.class}] Name:#{person.name}, ID: #{person.id}, Age:#{person.age}"
     end
   end
-  
+
   def find_person
     index = @input.to_i
     p(index)
@@ -162,7 +163,7 @@ class App
     adjust_input
     find_people_who_rent
 
-    return puts "Rentals: No record found\n" if @rentals.length == 0
+    return puts "Rentals: No record found\n" if @rentals.length.zero?
 
     display_rentals
   end
