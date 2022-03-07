@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-
 require_relative './lib/person'
 require_relative './lib/student'
 require_relative './lib/teacher'
@@ -10,9 +8,9 @@ require 'date'
 class App
   def initialize
     @input = nil
-    @students = []
-    @teachers = []
+    @people = []
     @books = []
+    @rentals = []
     @options = ['List all books', 'List all people', 'Create a person', 'Create a book', 'Create a rental',
                 'List all rentals for a given person id', 'Exit']
   end
@@ -40,23 +38,23 @@ class App
 
     loop do
       puts "Invalid entry. Please type a number between #{start}..#{limit}"
-      @input = gets.chomp
+      @input = adjust_input
       break if (start.to_s..limit.to_s).to_a.include?(@input)
     end
   end
 
   def permission?
-    true if @input == 'Y' || @input == 'y'
+    return true if @input.downcase == 'y'
+
+    false
   end
 
-  # rubocop:disable Metrics/CyclomaticComplexity
   def action_dispatch
     case @input
     when 1.to_s
-      books
+      display_list_of_books(1)
     when 2.to_s
-      students
-      teachers
+      display_list_of_person(2)
     when 3.to_s
       person
     when 4.to_s
@@ -65,12 +63,11 @@ class App
       rental
     when 6.to_s
       find_rental
-    when 7.to_s
+    else
       exit(false)
     end
   end
 
-  # rubocop:enable Metrics/CyclomaticComplexity
   def age
     puts 'Age:'
     adjust_input
@@ -89,12 +86,7 @@ class App
     puts 'Has parent permission? [Y/N]:'
     adjust_input
 
-    @students << (if permission?
-                    Student.new(age_input, name_input,
-                                permission?)
-                  else
-                    Student.new(age_input, name_input)
-                  end)
+    @people << Student.new(age_input, name_input, permission?)
     puts 'Student created successfully'
   end
 
@@ -103,7 +95,7 @@ class App
     name_input = name
 
     puts 'Specialization:'
-    @teachers << Teacher.new(age_input, name_input, false, adjust_input)
+    @people << Teacher.new(age_input, name_input, false, adjust_input)
     puts 'Teacher created successfully'
   end
 
@@ -124,74 +116,61 @@ class App
     puts 'Book created successfully'
   end
 
-  def books
-    @books.each { |book| puts "Title: #{book.title} Author: #{book.author}" }
-  end
-
-  def books_with_index
-    @books.each_with_index { |book, index| puts "#{index}) Title: #{book.title} Author: #{book.author}" }
-  end
-
-  def students
-    @students.each { |student| puts "[Students] Name: #{student.name} ID: #{student.id} Age: #{student.age}" }
-  end
-
-  def students_with_index
-    @students.each_with_index do |student, index|
-      puts "#{index}) [Students] Name: #{student.name} ID: #{student.id} Age: #{student.age}"
+  def display_list_of_books(from = 1)
+    @books.each_with_index do |book, index|
+      print "#{index}) " if from == 5
+      puts "Title: \"#{book.title}\", Author:#{book.author}"
     end
   end
 
-  def teachers
-    @teachers.each { |teacher| puts "[Teachers] Name: #{teacher.name} ID: #{teacher.id} Age: #{teacher.age}" }
-  end
-
-  def teachers_with_index
-    index = @students.length
-    @teachers.each { |teacher| puts "#{index}) [Teachers] Name: #{teacher.name} ID: #{teacher.id} Age: #{teacher.age}" }
+  def display_list_of_person(from = 2)
+    @people.each_with_index do |person, index|
+      print "#{index}) " if from == 5
+      puts "[#{person.class}] Name:#{person.name}, ID: #{person.id}, Age:#{person.age}"
+    end
   end
 
   def find_person
     index = @input.to_i
     p(index)
-    @students[index] || @teachers[(index - @students.length)]
+    @people[index]
   end
 
   def rental
     puts 'Select a book from the following list by number'
-    books_with_index
+    display_list_of_books(5)
     adjust_input
     validate(0, @books.length)
     book_for_rent = @books[@input.to_i]
 
     puts 'Select a person from the following list by number (not id)'
-    students_with_index
-    teachers_with_index
+    display_list_of_person(5)
     adjust_input
     person_who_rent = find_person
 
     puts 'Type date like : YYYY-MM-DD'
     adjust_input
-    p(Rental.new(@input, book_for_rent, person_who_rent))
+    Rental.new(@input, book_for_rent, person_who_rent)
 
     puts 'Rental created successfully'
   end
 
   def find_rental
-    rentals = nil
+    @rentals = []
     print 'ID of Person: '
     adjust_input
-    @students.each { |student| rentals = student.rentals if student.id == @input.to_i }
-    @teachers.each { |teacher| rentals = teacher.rentals if teacher.id == @input.to_i }
-    return puts "Rentals: No record found\n" unless rentals
+    find_people_who_rent
 
-    rentals.each { |rent| puts "Rental: Date: #{rent.date}, Book: #{rent.book.title}, Author: #{rent.book.author}\n" }
+    return puts "Rentals: No record found\n" if @rentals.length.zero?
+
+    display_rentals
+  end
+
+  def find_people_who_rent
+    @people.each { |person| @rentals = person.rentals if person.id == @input.to_i }
+  end
+
+  def display_rentals
+    @rentals.each { |rent| puts "Rental: Date: #{rent.date}, Book: #{rent.book.title}, Author: #{rent.book.author}\n" }
   end
 end
-
-def main
-  app = App.new
-  app.run
-end
-
-main
