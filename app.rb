@@ -68,8 +68,8 @@ class App
     when 6.to_s
       find_rental
     else
-      p(@books)
       Book.write_file(@books)
+      Person.write_file(@people)
       exit(false)
     end
   end

@@ -35,7 +35,6 @@ class Book
     data.each do |d|
       data_arr << {title: d.title, author: d.author}
     end
-    p(data_arr)
     File.write(@@path, JSON.generate(data_arr))
   end
 end
