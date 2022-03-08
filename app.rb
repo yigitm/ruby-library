@@ -88,7 +88,7 @@ class App
     puts 'Has parent permission? [Y/N]:'
     adjust_input
 
-    @people << Student.new(age.to_i, nil, name: name, parent_permission: permission? )
+    @people << Student.new(nil, age_input, name: name_input, parent_permission: permission? )
     puts 'Student created successfully'
   end
 
@@ -97,7 +97,9 @@ class App
     name_input = name
 
     puts 'Specialization:'
-    @people << Teacher.new(age.to_i, specialization, name: name)
+    specialization = adjust_input
+
+    @people << Teacher.new(nil, age_input, specialization, name: name_input)
     puts 'Teacher created successfully'
   end
 
