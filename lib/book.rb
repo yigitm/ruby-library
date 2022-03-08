@@ -1,9 +1,10 @@
 require 'json'
 
 class Book
-  attr_accessor :title, :author, :rentals
+  attr_accessor :title, :author, :rentals, :id
 
-  def initialize(title, author)
+  def initialize(id = nil, title, author)
+    @id = id || rand(8..100)
     @title = title
     @author = author
     @rentals = []
@@ -20,7 +21,7 @@ class Book
     data_arr = []
     if Book.check_file
       JSON.parse(File.read(@@path)).each do |element|
-        data_arr << Book.new(element['title'], element['author'])
+        data_arr << Book.new(element['id'], ['title'], element['author'])
       end
     end
     data_arr
@@ -33,7 +34,7 @@ class Book
   def self.write_file(data = [])
     data_arr = []
     data.each do |d|
-      data_arr << {title: d.title, author: d.author}
+      data_arr << {id: d.id, title: d.title, author: d.author}
     end
     File.write(@@path, JSON.generate(data_arr))
   end
