@@ -8,7 +8,7 @@ require 'date'
 class App
   def initialize
     @input = nil
-    @people = []
+    @people = Person.read_file
     @books = Book.read_file
     @rentals = []
     @options = ['List all books', 'List all people', 'Create a person', 'Create a book', 'Create a rental',
@@ -22,10 +22,6 @@ class App
       validate(1, 7)
       action_dispatch
     end
-  end
-
-  def method_name
-    
   end
 
   def options
@@ -92,7 +88,7 @@ class App
     puts 'Has parent permission? [Y/N]:'
     adjust_input
 
-    @people << Student.new(age_input, name_input, permission?)
+    @people << Student.new(age.to_i, nil, name: name, parent_permission: permission? )
     puts 'Student created successfully'
   end
 
@@ -101,7 +97,7 @@ class App
     name_input = name
 
     puts 'Specialization:'
-    @people << Teacher.new(age_input, name_input, false, adjust_input)
+    @people << Teacher.new(age.to_i, specialization, name: name)
     puts 'Teacher created successfully'
   end
 

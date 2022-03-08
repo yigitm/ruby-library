@@ -6,9 +6,9 @@ class Person < Nameable
 
   @@path = "data/person.json"
 
-  def initialize(age, name = 'unknown', *, parent_permission: false)
+  def initialize(id = nil, age, name: 'unknown', parent_permission: false)
     super()
-    @id = rand(8..100)
+    @id = id || rand(8..100)
     @age = age
     @name = name
     @parent_permission = parent_permission
@@ -41,5 +41,23 @@ class Person < Nameable
       end
     end
     File.write(@@path, JSON.generate(data_arr))
+  end
+
+  def self.read_file
+    data_arr = []
+    if Person.check_file
+      JSON.parse(File.read(@@path)).each do |element|
+        if element['type'] == 'student'
+          data_arr << Student.new(element['id'], element['age'], name: element['name'], parent_permission: element['parent_permission'])
+        else
+          data_arr << Teacher.new(element['id'], element['age'], element['specialization'], name: element['name'])
+        end
+    end
+  end
+    data_arr
+  end
+
+  def self.check_file
+    File.exist?(@@path) ? true : false
   end
 end
