@@ -21,7 +21,7 @@ class Book
     data_arr = []
     if Book.check_file
       JSON.parse(File.read(@@path)).each do |element|
-        data_arr << Book.new(element['id'], ['title'], element['author'])
+        data_arr << Book.new(element['id'], element['title'], element['author'])
       end
     end
     data_arr
