@@ -18,4 +18,20 @@ class Rental
     end
     File.write(@@path, JSON.generate(data_arr))
   end
+
+  def self.read_file(people, books)
+    data_arr = []
+    if Rental.check_file
+      JSON.parse(File.read(@@path)).each do |element|
+        person = people.select { |person| person.id == element['person_id'] }[0]
+        book = books.select { |book| book.id == element['book_id'] }[0]
+        data_arr << Rental.new(element['date'], book, person)
+    end
+  end
+    data_arr
+  end
+
+  def self.check_file
+    File.exist?(@@path) ? true : false
+  end
 end

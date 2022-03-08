@@ -11,7 +11,7 @@ class App
     @people = Person.read_file
     @books = Book.read_file
     @rentals_for_person = []
-    @rentals = []
+    @rentals = Rental.read_file(@people, @books)
     @options = ['List all books', 'List all people', 'Create a person', 'Create a book', 'Create a rental',
                 'List all rentals for a given person id', 'Exit']
   end
@@ -158,7 +158,6 @@ class App
     puts 'Type date like : YYYY-MM-DD'
     adjust_input
     @rentals << Rental.new(@input, book_for_rent, person_who_rent)
-
     puts 'Rental created successfully'
   end
 
