@@ -61,6 +61,12 @@ ruby main.rb
 - Twitter: [@ygtmrsn](https://twitter.com/ygtmrsn)
 - LinkedIn: [yigitmersin](linkedin.com/in/yigitmersin)
 
+👤 **George Magdy**
+
+- GitHub: [@George_Magdy](https://github.com/gemmen29)
+- Twitter: [@George_Magdy](https://twitter.com/georgtriple1)
+- LinkedIn: [@George_Magdy](https://www.linkedin.com/in/george-magdy-840/)
+
 ## 🤝 Contributing
 
 Contributions, issues, and feature requests are welcome!

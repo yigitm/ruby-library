@@ -1,0 +1,51 @@
+[
+  {
+    "type": "student",
+    "id": 48,
+    "age": "15",
+    "name": "hgghfghf",
+    "parent_permission": false
+  },
+  {
+    "type": "teacher",
+    "id": 39,
+    "age": "50",
+    "name": "gdfgdfgf",
+    "specialization": "cs"
+  },
+  {
+    "type": "student",
+    "id": 64,
+    "age": "40",
+    "name": "gjhfjhgjh",
+    "parent_permission": false
+  },
+  {
+    "type": "student",
+    "id": 46,
+    "age": "14",
+    "name": "jhhjjh",
+    "parent_permission": false
+  },
+  {
+    "type": "student",
+    "id": 50,
+    "age": "47",
+    "name": "gjhghjjhg",
+    "parent_permission": true
+  },
+  {
+    "type": "teacher",
+    "id": 29,
+    "age": "70",
+    "name": "jhgjghjhgjgh",
+    "specialization": "bfvdfghhfghf"
+  },
+  {
+    "type": "student",
+    "id": 22,
+    "age": "10",
+    "name": "ghfghfhgf",
+    "parent_permission": true
+  }
+]

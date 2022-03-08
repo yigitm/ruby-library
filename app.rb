@@ -8,9 +8,10 @@ require 'date'
 class App
   def initialize
     @input = nil
-    @people = []
-    @books = []
-    @rentals = []
+    @people = Person.read_file
+    @books = Book.read_file
+    @rentals_for_person = []
+    @rentals = Rental.read_file(@people, @books)
     @options = ['List all books', 'List all people', 'Create a person', 'Create a book', 'Create a rental',
                 'List all rentals for a given person id', 'Exit']
   end
@@ -61,9 +62,13 @@ class App
       book
     when 5.to_s
       rental
+      p(@rentals)
     when 6.to_s
       find_rental
     else
+      Book.write_file(@books)
+      Person.write_file(@people)
+      Rental.write_file(@rentals)
       exit(false)
     end
   end
@@ -86,7 +91,7 @@ class App
     puts 'Has parent permission? [Y/N]:'
     adjust_input
 
-    @people << Student.new(age_input, name_input, permission?)
+    @people << Student.new(age_input, name: name_input, parent_permission: permission?)
     puts 'Student created successfully'
   end
 
@@ -95,7 +100,9 @@ class App
     name_input = name
 
     puts 'Specialization:'
-    @people << Teacher.new(age_input, name_input, false, adjust_input)
+    specialization = adjust_input
+
+    @people << Teacher.new(age_input, specialization, name: name_input)
     puts 'Teacher created successfully'
   end
 
@@ -150,27 +157,28 @@ class App
 
     puts 'Type date like : YYYY-MM-DD'
     adjust_input
-    Rental.new(@input, book_for_rent, person_who_rent)
-
+    @rentals << Rental.new(@input, book_for_rent, person_who_rent)
     puts 'Rental created successfully'
   end
 
   def find_rental
-    @rentals = []
+    @rentals_for_person = []
     print 'ID of Person: '
     adjust_input
     find_people_who_rent
 
-    return puts "Rentals: No record found\n" if @rentals.length.zero?
+    return puts "Rentals: No record found\n" if @rentals_for_person.length.zero?
 
     display_rentals
   end
 
   def find_people_who_rent
-    @people.each { |person| @rentals = person.rentals if person.id == @input.to_i }
+    @people.each { |person| @rentals_for_person = person.rentals if person.id == @input.to_i }
   end
 
   def display_rentals
-    @rentals.each { |rent| puts "Rental: Date: #{rent.date}, Book: #{rent.book.title}, Author: #{rent.book.author}\n" }
+    @rentals_for_person.each do |rent|
+      puts "Rental: Date: #{rent.date}, Book: #{rent.book.title}, Author: #{rent.book.author}\n"
+    end
   end
 end
