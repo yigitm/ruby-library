@@ -3,39 +3,41 @@ require 'json'
 class Book
   attr_accessor :title, :author, :rentals, :id
 
-  def initialize(id = nil, title, author)
+  def initialize(title, author, id: nil)
     @id = id || rand(8..100)
     @title = title
     @author = author
     @rentals = []
   end
 
-  @@path = "data/book.json"
-
   def add_rental(rental)
     @rentals = rental
     rental.book = self
   end
 
+  def self.path
+    'data/book.json'
+  end
+
   def self.read_file
     data_arr = []
     if Book.check_file
-      JSON.parse(File.read(@@path)).each do |element|
-        data_arr << Book.new(element['id'], element['title'], element['author'])
+      JSON.parse(File.read(Book.path)).each do |element|
+        data_arr << Book.new(element['title'], element['author'], id: element['id'])
       end
     end
     data_arr
   end
 
   def self.check_file
-    File.exist?(@@path) ? true : false
+    File.exist?(Book.path)
   end
 
   def self.write_file(data = [])
     data_arr = []
     data.each do |d|
-      data_arr << {id: d.id, title: d.title, author: d.author}
+      data_arr << { id: d.id, title: d.title, author: d.author }
     end
-    File.write(@@path, JSON.generate(data_arr))
+    File.write(Book.path, JSON.generate(data_arr))
   end
 end

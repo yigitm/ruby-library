@@ -4,9 +4,7 @@ class Person < Nameable
   attr_reader :id, :parent_permission
   attr_accessor :name, :age, :rentals
 
-  @@path = "data/person.json"
-
-  def initialize(id = nil, age, name: 'unknown', parent_permission: false)
+  def initialize(age, name: 'unknown', parent_permission: false, id: nil)
     super()
     @id = id || rand(8..100)
     @age = age
@@ -31,33 +29,38 @@ class Person < Nameable
     @name
   end
 
+  def self.path
+    'data/person.json'
+  end
+
   def self.write_file(data = [])
     data_arr = []
     data.each do |d|
-      if d.instance_of?(Student)
-        data_arr << {type: 'student', id: d.id, age: d.age, name: d.name, parent_permission: d.parent_permission}
-      else
-        data_arr << {type: 'teacher', id: d.id, age: d.age, name: d.name, specialization: d.specialization}
-      end
+      data_arr << if d.instance_of?(Student)
+                    { type: 'student', id: d.id, age: d.age, name: d.name, parent_permission: d.parent_permission }
+                  else
+                    { type: 'teacher', id: d.id, age: d.age, name: d.name, specialization: d.specialization }
+                  end
     end
-    File.write(@@path, JSON.generate(data_arr))
+    File.write(Person.path, JSON.generate(data_arr))
   end
 
   def self.read_file
     data_arr = []
     if Person.check_file
-      JSON.parse(File.read(@@path)).each do |element|
+      JSON.parse(File.read(Person.path)).each do |element|
         if element['type'] == 'student'
-          data_arr << Student.new(element['id'], element['age'], name: element['name'], parent_permission: element['parent_permission'])
+          data_arr << Student.new(element['age'], name: element['name'],
+                                                  parent_permission: element['parent_permission'], id: element['id'])
         else
-          data_arr << Teacher.new(element['id'], element['age'], element['specialization'], name: element['name'])
+          data_arr << Teacher.new(element['age'], element['specialization'], name: element['name'], id: element['id'])
         end
+      end
     end
-  end
     data_arr
   end
 
   def self.check_file
-    File.exist?(@@path) ? true : false
+    File.exist?(Person.path)
   end
 end
