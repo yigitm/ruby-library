@@ -9,7 +9,7 @@ class App
   def initialize
     @input = nil
     @people = []
-    @books = []
+    @books = Book.read_file
     @rentals = []
     @options = ['List all books', 'List all people', 'Create a person', 'Create a book', 'Create a rental',
                 'List all rentals for a given person id', 'Exit']

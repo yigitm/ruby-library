@@ -17,13 +17,17 @@ class Book
   end
 
   def self.read_file
-    JSON.parse(File.read(@path)).each do |element|
-      p(element)
+    data_arr = []
+    if Book.check_file
+      JSON.parse(File.read(@@path)).each do |element|
+        data_arr << Book.new(element['title'], element['author'])
+      end
     end
+    data_arr
   end
 
   def self.check_file
-    File.exist?(@path) ? true : false
+    File.exist?(@@path) ? true : false
   end
 
   def self.write_file(data = [])
