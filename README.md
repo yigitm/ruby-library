@@ -53,6 +53,32 @@ Use below command to run
 ruby main.rb
 ```
 
+### Test
+
+For testing.
+
+```
+cd ruby-library
+```
+
+Use below command to install gems(packages) that used
+
+```
+bundle install
+```
+
+To run all unit tests
+
+```
+rspec spec
+```
+
+To run a specific test
+
+```
+rspec spec/[filename].[extension]
+```
+
 ## Authors
 
 👤 **Yigit Mersin**
