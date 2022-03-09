@@ -1,3 +1,4 @@
+require_relative './rental'
 require 'json'
 
 class Book
