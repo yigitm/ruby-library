@@ -4,7 +4,7 @@ describe 'teacher Class' do
   before :each do
     @teacher = Teacher.new(50, 'CS', name: 'test teacher', parent_permission: false)
   end
-  
+
   it 'should validate teacher age' do
     expect(@teacher.age).to eq 50
   end

@@ -7,7 +7,7 @@ describe 'Book Class' do
     @book = Book.new('Title', 'Author')
     @student = Student.new(34, name: 'Test User', parent_permission: false)
   end
-  
+
   it 'should validate book title' do
     expect(@book.title).to eq 'Title'
   end
@@ -16,9 +16,9 @@ describe 'Book Class' do
     expect(@book.author).to eq 'Author'
   end
 
-   it 'should validate add_rental method for student' do
+  it 'should validate add_rental method for student' do
     date = '2022-03-23'
     @book.add_rental(date, @student)
     expect(@book.rentals.length).to eq 1
-   end
+  end
 end

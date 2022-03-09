@@ -9,7 +9,7 @@ describe 'Rental Class' do
     @student = Student.new(34, name: 'Test User', parent_permission: false)
     @rental = Rental.new(date, @book, @student)
   end
-  
+
   it 'should validate rental date' do
     expect(@rental.date).to eq '2022-03-23'
   end

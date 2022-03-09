@@ -6,7 +6,7 @@ describe 'classroom Class' do
     @classroom = Classroom.new('Class A')
     @student = Student.new(9, name: 'student', parent_permission: false)
   end
-  
+
   it 'should validate classroom label' do
     expect(@classroom.label).to eq 'Class A'
   end
